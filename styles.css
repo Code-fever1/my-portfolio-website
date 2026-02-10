@@ -220,7 +220,7 @@ img {
   border-radius: 10px;
   border: 1px solid transparent;
   font-weight: 600;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn:hover {
@@ -234,6 +234,7 @@ img {
 
 .btn-primary:hover {
   background: var(--primary-hover);
+  box-shadow: 0 0 20px rgba(10, 160, 160, 0.6), 0 0 40px rgba(10, 160, 160, 0.3);
 }
 
 .btn-outline {
