@@ -340,7 +340,9 @@ img {
 .skill-card:active,
 .project-card:hover,
 .project-card:active {
-  transform: translateY(-3px);
+  
+  transform: translateY(-5px);
+  transform: scale(1.05);
   box-shadow: 0 12px 30px rgba(0, 128, 128, 0.2), 0 0 22px rgba(0, 128, 128, 0.28);
 }
 
@@ -352,12 +354,16 @@ img {
   box-shadow: 0 8px 20px rgba(0, 128, 128, 0.25);
 }
 
+.icon-link{
+  margin-left: 15px;
+}
+
 .icon-link:hover,
 .icon-link:active {
   border-color: var(--primary);
-  color: var(--primary);
+  margin-left: 25px;
   box-shadow: 0 0 20px rgba(10, 160, 160, 0.6), 0 0 40px rgba(10, 160, 160, 0.3);
-  transform: scale(1.08);
+  transform: scale(1.12) ;
 }
 
 .email-line a:hover,
@@ -365,8 +371,9 @@ img {
   color: var(--primary-hover);
   background-color: rgba(10, 160, 160, 0.18);
   box-shadow: 0 0 0 1px rgba(10, 160, 160, 0.405), 0 10px 30px rgba(10, 160, 160, 0.405);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   background-size: 100% 2px;
+  transform: scale(1.12) ease-in-out;
 }
 
 .hero-image:hover,
