@@ -307,10 +307,28 @@ img {
   transform: translateY(-1px);
 }
 
-.btn-primary:hover,
-.btn-primary:active {
+
+/* Primary button */
+.btn-soft.btn-primary:hover,
+.btn-soft.btn-primary:active {
   background: var(--primary-hover);
+  color: #fafafa;
   box-shadow: 0 0 20px rgba(10, 160, 160, 0.6), 0 0 40px rgba(10, 160, 160, 0.3);
+  
+  transform: scale(1.03);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+/* Softer primary variant for hero buttons to improve visibility on the dark background */
+.btn-soft.btn-primary {
+  background-color: rgba(0, 128, 128, 0.125);
+  color: var(--primary-hover);
+  border-color: var(--primary);
+  margin-right: 5px;
 }
 
 .btn-outline:hover,
