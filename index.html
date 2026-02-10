@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PORTFOLIO</title>
+  <meta name="description" content="A sleek, modern online portfolio to showcase your work." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand">
+        <span class="brand-icon">&lt;/&gt;</span>
+        <span class="brand-text">Syed Alijah</span>
+      </a>
+      <nav class="desktop-nav">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button id="menuButton" class="menu-button" aria-label="Toggle Menu" aria-expanded="false" aria-controls="mobileNav">
+        &#9776;
+      </button>
+    </div>
+    <nav id="mobileNav" class="mobile-nav" hidden>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="about" class="section hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <h1>Hi, I'm <span class="accent">SYED ALIJAH</span></h1>
+          <h2>A Passionate Web Developer</h2>
+          <p>
+            I build beautiful, responsive, and user-friendly websites and applications.
+            Here's a showcase of my work and skills.
+          </p>
+          <a href="#projects" class="btn btn-primary">View My Work</a>
+        </div>
+        <div class="hero-image-wrap">
+          <img
+            src="IMG.jpg"
+            alt="A portrait photo for the about me section."
+            class="hero-image"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section section-muted">
+      <div class="container">
+        <div class="section-title">
+          <h2>My Projects</h2>
+          <p>Check out some of the projects I've worked on.</p>
+        </div>
+        <div id="projectsGrid" class="projects-grid"></div>
+      </div>
+    </section>
+
+    <section id="skills" class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Skills</h2>
+          <p>A collection of technologies I'm proficient with.</p>
+        </div>
+        <div id="skillsGrid" class="skills-grid"></div>
+      </div>
+    </section>
+
+    <section id="contact" class="section section-muted">
+      <div class="container">
+        <div class="section-title">
+          <h2>Get In Touch</h2>
+          <p>I'm currently open to new opportunities. Feel free to reach out!</p>
+        </div>
+        <div class="contact-wrap">
+          <div id="socialLinks" class="social-links"></div>
+          <p class="email-line">
+            <span class="email-icon">&#9993;</span>
+            <a href="mailto:alijahinnovates@gmail.com">alijahinnovates@gmail.com</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a href="#" class="brand">
+        <span class="brand-icon">&lt;/&gt;</span>
+        <span class="brand-text">Syed Alijah</span>
+      </a>
+      <p>&copy; <span id="year"></span> SYED. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
