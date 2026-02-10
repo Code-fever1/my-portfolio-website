@@ -317,7 +317,7 @@ img {
 }
 
 .hero-image:hover {
-  content: url("IMG2.png");
+  content: url("IMG2.jpg");
   transform: scale(1.05);
   box-shadow: 0 15px 45px rgba(0, 128, 128, 0.4);
 }
