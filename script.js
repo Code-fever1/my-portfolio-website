@@ -42,19 +42,56 @@ const projects = [
 ];
 
 const skills = {
-  Languages: ["JavaScript", "TypeScript", "HTML5", "CSS3", "Python", "SQL"],
-  Frontend: ["React", "Next.js", "Tailwind CSS", "Redux", "Vite"],
-  Backend: ["Node.js", "Express", "Firebase", "PostgreSQL", "REST APIs"],
-  "Tools & Platforms": ["Git", "GitHub", "Docker", "Vercel", "Jira"],
+  Languages: ["HTML5", "JavaScript", "TypeScript", "Java", "Python", "PHP", "C++", "CSS3"],
+  Frontend: ["React", "Next.js", "Angular", "AngularJS", "React Router", "React Native", "Electron"],
+  "Backend & APIs": [
+    "Node.js",
+    "Express.js",
+    "JWT",
+    "Nodemon",
+    "Firebase",
+    "MongoDB",
+    "MySQL",
+    "Apache",
+    "APIs (REST/HTTP)",
+  ],
+  "Cloud & Systems": ["AWS", "Azure", "Cloudflare", "Ubuntu", "Windows Terminal"],
+  "Tools & Platforms": [
+    "Git",
+    "GitHub",
+    "Postman",
+    "Cursor",
+    "Windsurf",
+    "AI Studio",
+    "Antigravity",
+    "AnyDesk",
+    "Arduino",
+    "Tor",
+    "EA",
+    "PSN",
+  ],
+  "Design & Creative": ["Figma", "Canva", "Adobe Lightroom"],
 };
 
 const socialLinks = [
-  { label: "GitHub", href: "#", icon: "GH" },
-  { label: "LinkedIn", href: "#", icon: "IN" },
-  { label: "Twitter", href: "#", icon: "X" },
+  { label: "GitHub", href: "#", icon: "github" },
+  { label: "LinkedIn", href: "#", icon: "linkedin" },
+  { label: "X (Twitter)", href: "#", icon: "x" },
 ];
 
 const THEME_KEY = "portfolio-theme";
+const SOCIAL_ICONS = {
+  github:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297C5.373.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.206 11.385.6.113.82-.258.82-.577 0-.285-.011-1.04-.016-2.04-3.338.725-4.043-1.61-4.043-1.61-.545-1.385-1.333-1.754-1.333-1.754-1.09-.744.084-.729.084-.729 1.205.084 1.84 1.236 1.84 1.236 1.07 1.835 2.807 1.305 3.492.998.107-.775.418-1.305.762-1.605-2.665-.304-5.467-1.334-5.467-5.93 0-1.31.468-2.38 1.236-3.22-.135-.303-.54-1.523.104-3.175 0 0 1.006-.322 3.301 1.23A11.47 11.47 0 0112 6.844c1.02.005 2.04.138 3 .404 2.28-1.552 3.286-1.23 3.286-1.23.644 1.652.239 2.872.12 3.175.765.84 1.229 1.91 1.229 3.22 0 4.61-2.804 5.625-5.474 5.92.434.375.81 1.103.81 2.223 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.566 22.092 24 17.592 24 12.297 24 5.67 18.627.297 12 .297z"/></svg>',
+  linkedin:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003zM7.119 20.452H3.553V9h3.566v11.452zM5.337 7.433a2.063 2.063 0 110-4.126 2.063 2.063 0 010 4.126zM20.447 20.452H16.89v-5.569c0-1.328-.028-3.037-1.853-3.037-1.852 0-2.136 1.445-2.136 2.939v5.667H9.346V9h3.414v1.561h.047c.476-.9 1.636-1.85 3.37-1.85 3.6 0 4.266 2.37 4.266 5.455v6.286z"/></svg>',
+  x:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.154h3.68l-8.04 9.188L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.29 19.49h2.039L6.486 3.24H4.298l13.313 17.404z"/></svg>',
+};
+
+function getSocialIcon(iconName) {
+  return SOCIAL_ICONS[iconName] || "";
+}
 
 function readSavedTheme() {
   try {
@@ -154,7 +191,7 @@ function renderSocial() {
     .map(
       (item) => `
       <a class="icon-link" href="${item.href}" target="_blank" rel="noopener noreferrer" aria-label="${item.label}">
-        <span>${item.icon}</span>
+        ${getSocialIcon(item.icon)}
       </a>
     `
     )
