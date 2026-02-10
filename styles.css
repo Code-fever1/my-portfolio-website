@@ -357,6 +357,26 @@ img {
   box-shadow: 0 15px 45px rgba(0, 128, 128, 0.4);
 }
 
+/* On touch / coarse pointer devices, prevent sticky :hover.
+   Only :active (press) should show the visual effects while the finger is held. */
+@media (hover: none) and (pointer: coarse) {
+  .desktop-nav a:hover,
+  .mobile-nav a:hover,
+  .btn:hover,
+  .btn-primary:hover,
+  .btn-outline:hover,
+  .skill-card:hover,
+  .project-card:hover,
+  .badge:hover,
+  .icon-link:hover,
+  .email-line a:hover,
+  .hero-image:hover {
+    transform: none;
+    box-shadow: none;
+    background-color: inherit;
+  }
+}
+
 .projects-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -436,6 +456,8 @@ img {
   gap: 0.45rem;
   transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease,
     background-color 0.22s ease;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .badge-icon {
