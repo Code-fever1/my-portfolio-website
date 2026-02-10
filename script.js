@@ -60,7 +60,7 @@ function readSavedTheme() {
   try {
     const saved = localStorage.getItem(THEME_KEY);
     return saved === "light" || saved === "dark" ? saved : null;
-  } catch {
+  } catch (error) {
     return null;
   }
 }
@@ -68,7 +68,7 @@ function readSavedTheme() {
 function saveTheme(theme) {
   try {
     localStorage.setItem(THEME_KEY, theme);
-  } catch {
+  } catch (error) {
     // Ignore storage failures in restricted browsing modes.
   }
 }
@@ -191,9 +191,17 @@ function setYear() {
   year.textContent = String(new Date().getFullYear());
 }
 
-renderProjects();
-renderSkills();
-renderSocial();
-setupThemeToggle();
-setupMenu();
-setYear();
+function initializeApp() {
+  renderProjects();
+  renderSkills();
+  renderSocial();
+  setupThemeToggle();
+  setupMenu();
+  setYear();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeApp);
+} else {
+  initializeApp();
+}

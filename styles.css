@@ -178,6 +178,10 @@ img {
   gap: 0.75rem;
 }
 
+.mobile-nav[hidden] {
+  display: none !important;
+}
+
 .hero-grid {
   display: grid;
   gap: 2.25rem;
