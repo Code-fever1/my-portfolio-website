@@ -54,6 +54,57 @@ const socialLinks = [
   { label: "Twitter", href: "#", icon: "X" },
 ];
 
+const THEME_KEY = "portfolio-theme";
+
+function readSavedTheme() {
+  try {
+    const saved = localStorage.getItem(THEME_KEY);
+    return saved === "light" || saved === "dark" ? saved : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveTheme(theme) {
+  try {
+    localStorage.setItem(THEME_KEY, theme);
+  } catch {
+    // Ignore storage failures in restricted browsing modes.
+  }
+}
+
+function getInitialTheme() {
+  const saved = readSavedTheme();
+  if (saved) return saved;
+  if (!window.matchMedia) return "dark";
+  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+}
+
+function applyTheme(theme) {
+  const root = document.documentElement;
+  root.setAttribute("data-theme", theme);
+  saveTheme(theme);
+
+  const button = document.getElementById("themeToggle");
+  if (!button) return;
+
+  button.textContent = theme === "dark" ? "Dark" : "Light";
+  button.setAttribute("aria-pressed", theme === "light" ? "true" : "false");
+  button.setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} theme`);
+}
+
+function setupThemeToggle() {
+  const button = document.getElementById("themeToggle");
+  applyTheme(getInitialTheme());
+  if (!button) return;
+
+  button.addEventListener("click", () => {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    const nextTheme = currentTheme === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+  });
+}
+
 function renderProjects() {
   const grid = document.getElementById("projectsGrid");
   if (!grid) return;
@@ -143,5 +194,6 @@ function setYear() {
 renderProjects();
 renderSkills();
 renderSocial();
+setupThemeToggle();
 setupMenu();
 setYear();
