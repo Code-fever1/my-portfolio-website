@@ -372,7 +372,7 @@ img {
 .hero-image:hover,
 .hero-image:active {
   transform: scale(1.05);
-  box-shadow: 0 15px 45px rgba(0, 128, 128, 0.4);
+  box-shadow: 0 5px 45px rgba(0, 128, 128, 0.593);
 }
 
 /* On touch / coarse pointer devices, prevent sticky :hover.
