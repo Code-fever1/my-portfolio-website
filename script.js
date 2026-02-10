@@ -340,24 +340,36 @@ function setupNavHighlight() {
   }
 
   function updateActiveOnScroll() {
-    const viewportCenter = window.scrollY + window.innerHeight / 2;
+    // Use a top-based position (with a small offset for the sticky header)
+    // so the section that is actually in view appears active, which feels
+    // more natural on mobile.
+    const scrollPosition = window.scrollY + 120; // header + breathing room
 
-    let closestHash = null;
-    let smallestDistance = Infinity;
+    let currentHash = null;
 
-    sectionEntries.forEach(({ hash, section }) => {
+    sectionEntries.forEach(({ hash, section }, index) => {
       const rect = section.getBoundingClientRect();
-      const sectionCenter = window.scrollY + rect.top + rect.height / 2;
-      const distance = Math.abs(sectionCenter - viewportCenter);
+      const top = window.scrollY + rect.top;
+      const bottom = top + rect.height;
 
-      if (distance < smallestDistance) {
-        smallestDistance = distance;
-        closestHash = hash;
+      if (scrollPosition >= top && scrollPosition < bottom) {
+        currentHash = hash;
       }
     });
 
-    if (closestHash) {
-      setActiveLink(closestHash);
+    const doc = document.documentElement;
+    const scrollBottom = window.scrollY + window.innerHeight;
+    const docHeight = doc.scrollHeight;
+
+    // If no section matched OR we are effectively at the bottom of the page,
+    // force the last section (e.g. #contact) to be active so the Contact nav
+    // item highlights when the user reaches the end.
+    if (sectionEntries.length && (!currentHash || scrollBottom >= docHeight - 4)) {
+      currentHash = sectionEntries[sectionEntries.length - 1].hash;
+    }
+
+    if (currentHash) {
+      setActiveLink(currentHash);
     }
   }
 
