@@ -42,10 +42,35 @@ const projects = [
 ];
 
 const skills = {
-  Languages: ["JavaScript", "TypeScript", "HTML5", "CSS3", "Python", "SQL"],
-  Frontend: ["React", "Next.js", "Tailwind CSS", "Redux", "Vite"],
-  Backend: ["Node.js", "Express", "Firebase", "PostgreSQL", "REST APIs"],
-  "Tools & Platforms": ["Git", "GitHub", "Docker", "Vercel", "Jira"],
+  Languages: ["HTML5", "JavaScript", "TypeScript", "Java", "Python", "PHP", "C++", "CSS3"],
+  Frontend: ["React", "Next.js", "Angular", "AngularJS", "React Router", "React Native", "Electron"],
+  "Backend & APIs": [
+    "Node.js",
+    "Express.js",
+    "JWT",
+    "Nodemon",
+    "Firebase",
+    "MongoDB",
+    "MySQL",
+    "Apache",
+    "APIs (REST/HTTP)",
+  ],
+  "Cloud & Systems": ["AWS", "Azure", "Cloudflare", "Ubuntu", "Windows Terminal"],
+  "Tools & Platforms": [
+    "Git",
+    "GitHub",
+    "Postman",
+    "Cursor",
+    "Windsurf",
+    "AI Studio",
+    "Antigravity",
+    "AnyDesk",
+    "Arduino",
+    "Tor",
+    "EA",
+    "PSN",
+  ],
+  "Design & Creative": ["Figma", "Canva", "Adobe Lightroom"],
 };
 
 const socialLinks = [
