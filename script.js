@@ -371,6 +371,32 @@ function setYear() {
   year.textContent = String(new Date().getFullYear());
 }
 
+function setupHeroImageInteractions() {
+  const hero = document.querySelector(".hero-image");
+  if (!hero || !(hero instanceof HTMLImageElement)) return;
+
+  const originalSrc = hero.getAttribute("src");
+  const altSrc = hero.getAttribute("data-alt-src") || "IMG2.jpg";
+
+  if (!originalSrc || !altSrc || originalSrc === altSrc) return;
+
+  const activate = () => {
+    hero.src = altSrc;
+  };
+
+  const deactivate = () => {
+    hero.src = originalSrc;
+  };
+
+  hero.addEventListener("mouseenter", activate);
+  hero.addEventListener("mouseleave", deactivate);
+  hero.addEventListener("mousedown", activate);
+  hero.addEventListener("mouseup", deactivate);
+  hero.addEventListener("touchstart", activate, { passive: true });
+  hero.addEventListener("touchend", deactivate);
+  hero.addEventListener("touchcancel", deactivate);
+}
+
 function initializeApp() {
   renderProjects();
   renderSkills();
@@ -379,6 +405,7 @@ function initializeApp() {
   setupMenu();
   setupNavHighlight();
   setYear();
+  setupHeroImageInteractions();
 }
 
 if (document.readyState === "loading") {

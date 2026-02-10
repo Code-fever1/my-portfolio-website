@@ -285,72 +285,76 @@ img {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Enable rich hover effects only on devices that actually support hover (e.g. mouse/trackpad).
-   This prevents "stuck" hover states on touch devices. */
-@media (hover: hover) and (pointer: fine) {
-  .desktop-nav a:hover,
-  .mobile-nav a:hover {
-    color: var(--nav-link-hover);
-    background-color: rgba(10, 160, 160, 0.12);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-  }
+.desktop-nav a:hover,
+.mobile-nav a:hover,
+.desktop-nav a:active,
+.mobile-nav a:active {
+  color: var(--nav-link-hover);
+  background-color: rgba(10, 160, 160, 0.12);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+}
 
-  .desktop-nav a:hover::after,
-  .mobile-nav a:hover::after {
-    transform: scaleX(1);
-  }
+.desktop-nav a:hover::after,
+.mobile-nav a:hover::after,
+.desktop-nav a:active::after,
+.mobile-nav a:active::after {
+  transform: scaleX(1);
+}
 
-  .btn:hover {
-    transform: translateY(-1px);
-  }
+.btn:hover,
+.btn:active {
+  transform: translateY(-1px);
+}
 
-  .btn-primary:hover {
-    background: var(--primary-hover);
-    box-shadow: 0 0 20px rgba(10, 160, 160, 0.6), 0 0 40px rgba(10, 160, 160, 0.3);
-  }
+.btn-primary:hover,
+.btn-primary:active {
+  background: var(--primary-hover);
+  box-shadow: 0 0 20px rgba(10, 160, 160, 0.6), 0 0 40px rgba(10, 160, 160, 0.3);
+}
 
-  .btn-outline:hover {
-    background: var(--muted);
-  }
+.btn-outline:hover,
+.btn-outline:active {
+  background: var(--muted);
+}
 
-  .skill-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(0, 128, 128, 0.2), 0 0 22px rgba(0, 128, 128, 0.28);
-  }
+.skill-card:hover,
+.skill-card:active,
+.project-card:hover,
+.project-card:active {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 128, 128, 0.2), 0 0 22px rgba(0, 128, 128, 0.28);
+}
 
-  .project-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(0, 128, 128, 0.2), 0 0 22px rgba(0, 128, 128, 0.28);
-  }
+.badge:hover,
+.badge:active {
+  transform: translateY(-2px) scale(1.05);
+  border-color: var(--primary);
+  background-color: rgba(10, 160, 160, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 128, 128, 0.25);
+}
 
-  .badge:hover {
-    transform: translateY(-2px) scale(1.05);
-    border-color: var(--primary);
-    background-color: rgba(10, 160, 160, 0.1);
-    box-shadow: 0 8px 20px rgba(0, 128, 128, 0.25);
-  }
+.icon-link:hover,
+.icon-link:active {
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 20px rgba(10, 160, 160, 0.6), 0 0 40px rgba(10, 160, 160, 0.3);
+  transform: scale(1.08);
+}
 
-  .icon-link:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    box-shadow: 0 0 20px rgba(10, 160, 160, 0.6), 0 0 40px rgba(10, 160, 160, 0.3);
-    transform: scale(1.08);
-  }
+.email-line a:hover,
+.email-line a:active {
+  color: var(--primary-hover);
+  background-color: rgba(10, 160, 160, 0.18);
+  box-shadow: 0 0 0 1px rgba(10, 160, 160, 0.405), 0 10px 30px rgba(10, 160, 160, 0.405);
+  transform: translateY(-1px);
+  background-size: 100% 2px;
+}
 
-  .email-line a:hover {
-    color: var(--primary-hover);
-    background-color: rgba(10, 160, 160, 0.18);
-    box-shadow: 0 0 0 1px rgba(10, 160, 160, 0.405), 0 10px 30px rgba(10, 160, 160, 0.405);
-    transform: translateY(-1px);
-    background-size: 100% 2px;
-  }
-
-  .hero-image:hover {
-    content: url("IMG2.jpg");
-    transform: scale(1.05);
-    box-shadow: 0 15px 45px rgba(0, 128, 128, 0.4);
-  }
+.hero-image:hover,
+.hero-image:active {
+  transform: scale(1.05);
+  box-shadow: 0 15px 45px rgba(0, 128, 128, 0.4);
 }
 
 .projects-grid {
