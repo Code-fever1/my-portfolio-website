@@ -74,9 +74,8 @@ const skills = {
 };
 
 const socialLinks = [
-  { label: "GitHub", href: "#", icon: "github" },
-  { label: "LinkedIn", href: "#", icon: "linkedin" },
-  { label: "X (Twitter)", href: "#", icon: "x" },
+  { label: "GitHub", href: "https://github.com/Code-fever1", icon: "github" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/syed-ali-jah-520770334/", icon: "linkedin" },
 ];
 
 const THEME_KEY = "portfolio-theme";
@@ -88,6 +87,78 @@ const SOCIAL_ICONS = {
   x:
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.154h3.68l-8.04 9.188L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.29 19.49h2.039L6.486 3.24H4.298l13.313 17.404z"/></svg>',
 };
+
+const SKILL_ICON_MAP = {
+  HTML5: { className: "devicon-html5-plain", label: "HTML5" },
+  CSS3: { className: "devicon-css3-plain", label: "CSS3" },
+  JavaScript: { className: "devicon-javascript-plain", label: "JavaScript" },
+  TypeScript: { className: "devicon-typescript-plain", label: "TypeScript" },
+  React: { className: "devicon-react-original", label: "React" },
+  "Next.js": { className: "devicon-nextjs-original", label: "Next.js" },
+  Angular: { className: "devicon-angularjs-plain", label: "Angular" },
+  AngularJS: { className: "devicon-angularjs-plain", label: "AngularJS" },
+  "React Router": { className: "devicon-react-original", label: "React Router" },
+  "React Native": { className: "devicon-react-original", label: "React Native" },
+  Electron: { className: "devicon-electron-original", label: "Electron" },
+  "Node.js": { className: "devicon-nodejs-plain", label: "Node.js" },
+  "Express.js": { className: "devicon-express-original", label: "Express" },
+  Firebase: { className: "devicon-firebase-plain", label: "Firebase" },
+  MongoDB: { className: "devicon-mongodb-plain", label: "MongoDB" },
+  MySQL: { className: "devicon-mysql-plain", label: "MySQL" },
+  Apache: { className: "devicon-apache-plain", label: "Apache" },
+  AWS: { className: "devicon-amazonwebservices-plain-wordmark", label: "AWS" },
+  Azure: { className: "devicon-azure-plain", label: "Azure" },
+  Cloudflare: { className: "devicon-cloudflare-plain", label: "Cloudflare" },
+  Ubuntu: { className: "devicon-ubuntu-plain", label: "Ubuntu" },
+  Python: { className: "devicon-python-plain", label: "Python" },
+  Java: { className: "devicon-java-plain", label: "Java" },
+  PHP: { className: "devicon-php-plain", label: "PHP" },
+  "C++": { className: "devicon-cplusplus-plain", label: "C++" },
+  Git: { className: "devicon-git-plain", label: "Git" },
+  GitHub: { className: "devicon-github-original", label: "GitHub" },
+  Postman: { className: "devicon-postman-plain", label: "Postman" },
+  Figma: { className: "devicon-figma-plain", label: "Figma" },
+  Canva: { className: "devicon-canva-original", label: "Canva" },
+
+  // Closest matches for tools without exact Devicon logos
+  JWT: { className: "devicon-nodejs-plain", label: "JWT" },
+  Nodemon: { className: "devicon-nodejs-plain", label: "Nodemon" },
+  "APIs (REST/HTTP)": { className: "devicon-postman-plain", label: "APIs (REST/HTTP)" },
+  Cursor: { className: "devicon-vscode-plain", label: "Cursor" },
+  Windsurf: { className: "devicon-vscode-plain", label: "Windsurf" },
+  "AI Studio": { className: "devicon-python-plain", label: "AI Studio" },
+  Antigravity: { className: "devicon-python-plain", label: "Antigravity" },
+  AnyDesk: { className: "devicon-windows8-original", label: "AnyDesk" },
+  Arduino: { className: "devicon-arduino-plain", label: "Arduino" },
+  Tor: { className: "devicon-firefox-plain", label: "Tor" },
+  EA: { className: "devicon-google-plain", label: "EA" },
+  PSN: { className: "devicon-google-plain", label: "PSN" },
+  "Windows Terminal": { className: "devicon-bash-plain", label: "Windows Terminal" },
+  "Adobe Lightroom": { className: "devicon-photoshop-plain", label: "Adobe Lightroom" },
+};
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function renderSkillBadge(skillName) {
+  const entry = SKILL_ICON_MAP[skillName];
+  const label = entry?.label ?? skillName;
+  const iconClass = entry?.className;
+  const safeLabel = escapeHtml(label);
+  const safeTitle = escapeHtml(skillName);
+
+  if (!iconClass) {
+    return `<span class="badge" title="${safeTitle}"><span class="badge-label">${safeLabel}</span></span>`;
+  }
+
+  return `<span class="badge" title="${safeTitle}"><i class="badge-icon ${iconClass}" aria-hidden="true"></i><span class="badge-label">${safeLabel}</span></span>`;
+}
 
 function getSocialIcon(iconName) {
   return SOCIAL_ICONS[iconName] || "";
@@ -124,8 +195,11 @@ function applyTheme(theme) {
 
   const button = document.getElementById("themeToggle");
   if (!button) return;
+  const isDark = theme === "dark";
+  const icon = isDark ? "🌙" : "☀";
+  const label = isDark ? "Dark" : "Light";
 
-  button.textContent = theme === "dark" ? "Dark" : "Light";
+  button.innerHTML = `<span class="theme-icon" aria-hidden="true">${icon}</span><span class="theme-label">${label}</span>`;
   button.setAttribute("aria-pressed", theme === "light" ? "true" : "false");
   button.setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} theme`);
 }
@@ -175,7 +249,7 @@ function renderSkills() {
       <article class="skill-card">
         <h3>${category}</h3>
         <div class="badge-wrap">
-          ${items.map((item) => `<span class="badge">${item}</span>`).join("")}
+          ${items.map((item) => renderSkillBadge(item)).join("")}
         </div>
       </article>
     `
@@ -222,6 +296,75 @@ function setupMenu() {
   });
 }
 
+function setupNavHighlight() {
+  const links = Array.from(
+    document.querySelectorAll(".desktop-nav a[href^='#'], .mobile-nav a[href^='#']")
+  );
+  if (!links.length) return;
+
+  const sections = new Map();
+
+  links.forEach((link) => {
+    const hash = link.getAttribute("href");
+    if (!hash) return;
+    try {
+      const section = document.querySelector(hash);
+      if (section) {
+        sections.set(hash, section);
+      }
+    } catch (error) {
+      // Ignore invalid selectors
+    }
+
+    link.addEventListener("click", () => {
+      setActiveLink(hash);
+    });
+  });
+
+  if (!sections.size) return;
+
+  const sectionEntries = Array.from(sections.entries()).map(([hash, section]) => ({
+    hash,
+    section,
+  }));
+
+  function setActiveLink(targetHash) {
+    links.forEach((link) => {
+      const linkHash = link.getAttribute("href");
+      if (linkHash === targetHash) {
+        link.classList.add("nav-link-active");
+      } else {
+        link.classList.remove("nav-link-active");
+      }
+    });
+  }
+
+  function updateActiveOnScroll() {
+    const viewportCenter = window.scrollY + window.innerHeight / 2;
+
+    let closestHash = null;
+    let smallestDistance = Infinity;
+
+    sectionEntries.forEach(({ hash, section }) => {
+      const rect = section.getBoundingClientRect();
+      const sectionCenter = window.scrollY + rect.top + rect.height / 2;
+      const distance = Math.abs(sectionCenter - viewportCenter);
+
+      if (distance < smallestDistance) {
+        smallestDistance = distance;
+        closestHash = hash;
+      }
+    });
+
+    if (closestHash) {
+      setActiveLink(closestHash);
+    }
+  }
+
+  updateActiveOnScroll();
+  window.addEventListener("scroll", updateActiveOnScroll, { passive: true });
+}
+
 function setYear() {
   const year = document.getElementById("year");
   if (!year) return;
@@ -234,6 +377,7 @@ function initializeApp() {
   renderSocial();
   setupThemeToggle();
   setupMenu();
+  setupNavHighlight();
   setYear();
 }
 
