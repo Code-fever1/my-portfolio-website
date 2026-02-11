@@ -1,44 +1,44 @@
 const projects = [
   {
-    title: "Project One",
+    title: "Home Network Control Center (Electron App)",
     description:
-      "A brief description of project one, highlighting the technologies used and its purpose. This project solves a real-world problem by doing XYZ.",
+      "A custom-built Electron-based desktop application designed to centrally manage multiple home routers and network devices from a single interface.",
     image:
-      "https://images.unsplash.com/photo-1568952433726-3896e3881c65?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxhYnN0cmFjdCUyMHRlY2hub2xvZ3l8ZW58MHx8fHwxNzcwNzE3MTgwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "./images/router.jpg",
     imageAlt: "Placeholder image for the first project.",
-    liveUrl: "#",
-    sourceUrl: "#",
+    liveUrl: "https://home-router-prototype.html-5.me",
+    sourceUrl: "https://github.com/Code-fever1/HOME-ROUTER",
   },
   {
-    title: "Project Two",
+    title: "Construction CMS – Project & Financial Management System",
     description:
-      "A brief description of project two, highlighting the technologies used and its purpose. This project showcases advanced frontend techniques.",
+      "A web-based Construction Management System (CMS) built to help project owners manage construction projects, vendors, contractors, and financial summaries in one centralized dashboard.<br>This system provides structured project tracking and financial transparency for construction workflows.",
     image:
-      "https://images.unsplash.com/photo-1543071293-d91175a68672?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtb2Rlcm4lMjBhcmNoaXRlY3R1cmV8ZW58MHx8fHwxNzcwNzAzNTQ5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "./images/cms.jpg",
     imageAlt: "Placeholder image for the second project.",
-    liveUrl: "#",
-    sourceUrl: "#",
+    liveUrl: "https://construction-cms-prototype.html-5.me/",
+    sourceUrl: "",
   },
-  {
-    title: "Project Three",
-    description:
-      "A brief description of project three, highlighting the technologies used and its purpose. A full-stack application with a custom API.",
-    image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkYXRhJTIwdmlzdWFsaXphdGlvbnxlbnwwfHx8fDE3NzA2Mjc3NDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    imageAlt: "Placeholder image for the third project.",
-    liveUrl: "#",
-    sourceUrl: "#",
-  },
-  {
-    title: "Project Four",
-    description:
-      "A brief description of project four, highlighting the technologies used and its purpose. Focuses on performance and accessibility.",
-    image:
-      "https://images.unsplash.com/photo-1602576666092-bf6447a729fc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx1c2VyJTIwaW50ZXJmYWNlfGVufDB8fHx8MTc3MDY0NjkyMnww&ixlib=rb-4.1.0&q=80&w=1080",
-    imageAlt: "Placeholder image for the fourth project.",
-    liveUrl: "#",
-    sourceUrl: "#",
-  },
+  // {
+  //   title: "Project Three",
+  //   description:
+  //     "working on it",
+  //   image:
+  //     "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkYXRhJTIwdmlzdWFsaXphdGlvbnxlbnwwfHx8fDE3NzA2Mjc3NDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+  //   imageAlt: "Placeholder image for the third project.",
+  //   liveUrl: "",
+  //   sourceUrl: "",
+  // },
+  // {
+  //   title: "Project Four",
+  //   description:
+  //     "working on it",
+  //   image:
+  //     "https://images.unsplash.com/photo-1602576666092-bf6447a729fc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx1c2VyJTIwaW50ZXJmYWNlfGVufDB8fHx8MTc3MDY0NjkyMnww&ixlib=rb-4.1.0&q=80&w=1080",
+  //   imageAlt: "Placeholder image for the fourth project.",
+  //   liveUrl: "",
+  //   sourceUrl: "",
+  // },
 ];
 
 const skills = {
@@ -219,24 +219,135 @@ function setupThemeToggle() {
   });
 }
 
+function showPrivateMessage(event) {
+  event.stopPropagation();
+
+  // Create modal element
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+  `;
+
+  // Create modal content
+  const modalContent = document.createElement('div');
+  modalContent.style.cssText = `
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease;
+    position: relative;
+  `;
+
+  modalContent.innerHTML = `
+    <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+    <h3 style="color: #333; margin-bottom: 1rem; font-size: 1.5rem;">Private Project</h3>
+    <p style="color: #666; margin-bottom: 1.5rem; line-height: 1.6;">
+      This site is private source code cannot be shared or still in development unable to see
+    </p>
+    <button onclick="this.closest('.modal').remove()" style="
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: transform 0.2s ease;
+    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+      Got it! 🌟
+    </button>
+  `;
+
+  // Add modal class for easy removal
+  modal.className = 'modal';
+  modal.appendChild(modalContent);
+
+  // Add CSS animations
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Add modal to body
+  document.body.appendChild(modal);
+
+  // Close on backdrop click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.remove();
+    }
+  });
+
+  // Close on Escape key
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') {
+      modal.remove();
+      document.removeEventListener('keydown', handleEscape);
+    }
+  };
+  document.addEventListener('keydown', handleEscape);
+}
+
 function renderProjects() {
   const grid = document.getElementById("projectsGrid");
   if (!grid) return;
 
   grid.innerHTML = projects
     .map(
-      (project) => `
-      <article class="project-card">
-        <img src="${project.image}" alt="${project.imageAlt}" loading="lazy">
-        <div class="project-body">
-          <h3>${project.title}</h3>
-          <p>${project.description}</p>
-          <div class="project-actions">
-            <a class="btn btn-primary btn-soft" href="${project.sourceUrl}" target="_blank" rel="noopener noreferrer">Source</a>
+      (project) => {
+        const hasLiveUrl = project.liveUrl && project.liveUrl.trim() !== "";
+        const hasSourceUrl = project.sourceUrl && project.sourceUrl.trim() !== "";
+        const clickAction = hasLiveUrl ? `onclick="window.open('${project.liveUrl}', '_blank')"` : "";
+        const cursorStyle = hasLiveUrl ? "cursor: pointer;" : "cursor: not-allowed;";
+
+        return `
+        <article class="project-card" ${clickAction} style="${cursorStyle}">
+          <img src="${project.image}" alt="${project.imageAlt}" loading="lazy">
+          <div class="project-body">
+            <h3>${project.title}</h3>
+            <p>${project.description}</p>
+            <div class="project-actions">
+              ${hasLiveUrl ?
+            `<a class="btn btn-primary btn-soft" href="${project.liveUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Live Demo</a>` :
+            `<button class="btn btn-primary btn-soft" onclick="showPrivateMessage(event)" style="cursor: not-allowed; opacity: 0.7;">Live Demo</button>`
+          }
+              ${hasSourceUrl ?
+            `<a class="btn btn-primary btn-soft" href="${project.sourceUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Source</a>` :
+            `<button class="btn btn-primary btn-soft" onclick="showPrivateMessage(event)" style="cursor: not-allowed; opacity: 0.7;">Source</button>`
+          }
+            </div>
           </div>
-        </div>
-      </article>
-    `
+        </article>
+      `;
+      }
     )
     .join("");
 }
