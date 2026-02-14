@@ -409,6 +409,24 @@ function setupMenu() {
   });
 }
 
+function smoothScrollToElement(hash) {
+  try {
+    const target = document.querySelector(hash);
+    if (!target) return;
+
+    const header = document.querySelector(".site-header");
+    const headerHeight = header ? header.offsetHeight : 0;
+    const targetPosition = target.getBoundingClientRect().top + window.scrollY - headerHeight;
+
+    window.scrollTo({
+      top: targetPosition,
+      behavior: "smooth"
+    });
+  } catch (error) {
+    // Ignore invalid selectors
+  }
+}
+
 function setupNavHighlight() {
   const links = Array.from(
     document.querySelectorAll(".desktop-nav a[href^='#'], .mobile-nav a[href^='#']")
@@ -429,8 +447,10 @@ function setupNavHighlight() {
       // Ignore invalid selectors
     }
 
-    link.addEventListener("click", () => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
       setActiveLink(hash);
+      smoothScrollToElement(hash);
     });
   });
 
@@ -522,6 +542,126 @@ function setupHeroImageInteractions() {
   hero.addEventListener("touchcancel", deactivate);
 }
 
+function setupParallaxAvatar() {
+  const heroImage = document.querySelector(".hero-image");
+  const siteHeader = document.querySelector(".site-header");
+  const brand = document.querySelector(".brand");
+  
+  if (!heroImage || !siteHeader || !brand) return;
+  
+  // Get initial positions
+  const heroImageWrap = heroImage.parentElement;
+  const heroImageRect = heroImage.getBoundingClientRect();
+  const heroWrapRect = heroImageWrap.getBoundingClientRect();
+  const headerRect = siteHeader.getBoundingClientRect();
+  const brandRect = brand.getBoundingClientRect();
+  
+  // Calculate start and end positions
+  const startPos = {
+    x: heroWrapRect.left + heroWrapRect.width / 2, // Center of hero container
+    y: heroWrapRect.top + heroWrapRect.height / 2,
+    size: Math.min(380, window.innerWidth * 0.8),
+    opacity: 1
+  };
+  
+  const endPos = {
+    x: brandRect.left - 10, // Left side of brand with minimal spacing
+    y: headerRect.top + headerRect.height / 2, // Center of navbar
+    size: 32,
+    opacity: 1
+  };
+  
+let ticking = false;
+let animationStarted = false;
+  
+  function updateHeroImage() {
+    const scrollY = window.scrollY;
+    const maxScroll = 500; // Distance over which animation completes
+    
+    // On mobile, keep image in navbar instead of animating
+    const isMobile = window.innerWidth <= 767;
+    
+    if (isMobile) {
+      // Keep hero image fixed in navbar position on mobile
+      heroImage.style.position = 'fixed';
+      heroImage.style.left = `${endPos.x}px`;
+      heroImage.style.top = `${endPos.y}px`;
+      heroImage.style.width = `${endPos.size}px`;
+      heroImage.style.height = `${endPos.size}px`;
+      heroImage.style.transform = 'translate(-50%, -50%)';
+      heroImage.style.opacity = 1;
+    } else if (scrollY <= maxScroll) {
+      // Animate on desktop
+      const progress = scrollY / maxScroll;
+      const easedProgress = easeInOutCubic(progress);
+      
+      // Calculate current values
+      const currentX = startPos.x + (endPos.x - startPos.x) * easedProgress;
+      const currentY = startPos.y + (endPos.y - startPos.y) * easedProgress;
+      const currentSize = startPos.size + (endPos.size - startPos.size) * easedProgress;
+      
+      // Apply transformations to actual hero image
+      heroImage.style.position = 'fixed';
+      heroImage.style.left = `${currentX}px`;
+      heroImage.style.top = `${currentY}px`;
+      heroImage.style.width = `${currentSize}px`;
+      heroImage.style.height = `${currentSize}px`;
+      heroImage.style.transform = 'translate(-50%, -50%)'; // Center the image
+      heroImage.style.opacity = 1;
+      
+      animationStarted = true;
+    } else {
+      // Hold at final position on desktop
+      heroImage.style.position = 'fixed';
+      heroImage.style.left = `${endPos.x}px`;
+      heroImage.style.top = `${endPos.y}px`;
+      heroImage.style.width = `${endPos.size}px`;
+      heroImage.style.height = `${endPos.size}px`;
+      heroImage.style.transform = 'translate(-50%, -50%)';
+      heroImage.style.opacity = 1;
+    }
+  }
+  
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+  
+  function requestTick() {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        updateHeroImage();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+  
+  // Initial setup
+  updateHeroImage();
+  
+  // Add optimized scroll listener
+  window.addEventListener('scroll', requestTick, { passive: true });
+  
+  // Handle window resize
+  window.addEventListener('resize', () => {
+    // Recalculate positions on resize
+    const heroImageWrap = heroImage.parentElement;
+    const newHeroRect = heroImage.getBoundingClientRect();
+    const newHeroWrapRect = heroImageWrap.getBoundingClientRect();
+    const newHeaderRect = siteHeader.getBoundingClientRect();
+    const newBrandRect = brand.getBoundingClientRect();
+    
+    startPos.x = newHeroWrapRect.left + newHeroWrapRect.width / 2;
+    startPos.y = newHeroWrapRect.top + newHeroWrapRect.height / 2;
+    startPos.size = Math.min(380, window.innerWidth * 0.8);
+    
+    endPos.x = newBrandRect.left - 10;
+    endPos.y = newHeaderRect.top + newHeaderRect.height / 2;
+    
+    updateHeroImage();
+  });
+}
+
 function initializeApp() {
   renderProjects();
   renderSkills();
@@ -531,6 +671,7 @@ function initializeApp() {
   setupNavHighlight();
   setYear();
   setupHeroImageInteractions();
+  setupParallaxAvatar();
 }
 
 if (document.readyState === "loading") {
