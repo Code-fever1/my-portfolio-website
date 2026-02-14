@@ -545,121 +545,106 @@ function setupHeroImageInteractions() {
 function setupParallaxAvatar() {
   const heroImage = document.querySelector(".hero-image");
   const siteHeader = document.querySelector(".site-header");
-  const brand = document.querySelector(".brand");
-  
-  if (!heroImage || !siteHeader || !brand) return;
-  
-  // Get initial positions
-  const heroImageWrap = heroImage.parentElement;
-  const heroImageRect = heroImage.getBoundingClientRect();
-  const heroWrapRect = heroImageWrap.getBoundingClientRect();
-  const headerRect = siteHeader.getBoundingClientRect();
-  const brandRect = brand.getBoundingClientRect();
-  
-  // Calculate start and end positions
-  const startPos = {
-    x: heroWrapRect.left + heroWrapRect.width / 2, // Center of hero container
-    y: heroWrapRect.top + heroWrapRect.height / 2,
-    size: Math.min(380, window.innerWidth * 0.8),
-    opacity: 1
-  };
-  
-  const endPos = {
-    x: brandRect.left - 10, // Left side of brand with minimal spacing
-    y: headerRect.top + headerRect.height / 2, // Center of navbar
-    size: 32,
-    opacity: 1
-  };
-  
-let ticking = false;
-let animationStarted = false;
-  
-  function updateHeroImage() {
+  const heroImageWrap = document.querySelector(".content-wrapper .hero-image-wrap");
+  const brand = document.querySelector(".site-header .brand");
+
+  if (!heroImage || !siteHeader || !heroImageWrap || !brand) return;
+
+  /* ── Tunables ─────────────────────────────────────────── */
+  const AVATAR_SIZE = 40;     // final avatar size in px when docked
+  const STOP_GAP = 8;      // px gap above navbar bottom for final Y
+  /* ────────────────────────────────────────────────────── */
+
+  // Move image to body so position:fixed works (avoids backdrop-filter context)
+  if (heroImage.parentElement !== document.body) {
+    document.body.appendChild(heroImage);
+  }
+
+  // Measurements (document-relative)
+  let originX, originY, originSize;
+
+  function measureOrigin() {
+    const rect = heroImageWrap.getBoundingClientRect();
+    originX = rect.left + rect.width / 2 + window.scrollX;
+    originY = rect.top + rect.height / 2 + window.scrollY;
+    originSize = heroImage.offsetWidth || rect.width;
+  }
+
+  measureOrigin();
+
+  // How far the user must scroll for the full animation to complete
+  // (from hero origin down to where image would be at navbar level)
+  function getScrollRange() {
+    const headerH = siteHeader.offsetHeight;
+    // The image needs to travel from its document-Y origin to the navbar centre
+    const targetDocY = headerH / 2;
+    return Math.max(originY - targetDocY - 60, 1); // 60 = main padding-top
+  }
+
+  let ticking = false;
+
+  function update() {
     const scrollY = window.scrollY;
-    const maxScroll = 500; // Distance over which animation completes
-    
-    // On mobile, keep image in navbar instead of animating
-    const isMobile = window.innerWidth <= 767;
-    
-    if (isMobile) {
-      // Keep hero image fixed in navbar position on mobile
-      heroImage.style.position = 'fixed';
-      heroImage.style.left = `${endPos.x}px`;
-      heroImage.style.top = `${endPos.y}px`;
-      heroImage.style.width = `${endPos.size}px`;
-      heroImage.style.height = `${endPos.size}px`;
-      heroImage.style.transform = 'translate(-50%, -50%)';
-      heroImage.style.opacity = 1;
-    } else if (scrollY <= maxScroll) {
-      // Animate on desktop
-      const progress = scrollY / maxScroll;
-      const easedProgress = easeInOutCubic(progress);
-      
-      // Calculate current values
-      const currentX = startPos.x + (endPos.x - startPos.x) * easedProgress;
-      const currentY = startPos.y + (endPos.y - startPos.y) * easedProgress;
-      const currentSize = startPos.size + (endPos.size - startPos.size) * easedProgress;
-      
-      // Apply transformations to actual hero image
-      heroImage.style.position = 'fixed';
-      heroImage.style.left = `${currentX}px`;
-      heroImage.style.top = `${currentY}px`;
-      heroImage.style.width = `${currentSize}px`;
-      heroImage.style.height = `${currentSize}px`;
-      heroImage.style.transform = 'translate(-50%, -50%)'; // Center the image
-      heroImage.style.opacity = 1;
-      
-      animationStarted = true;
-    } else {
-      // Hold at final position on desktop
-      heroImage.style.position = 'fixed';
-      heroImage.style.left = `${endPos.x}px`;
-      heroImage.style.top = `${endPos.y}px`;
-      heroImage.style.width = `${endPos.size}px`;
-      heroImage.style.height = `${endPos.size}px`;
-      heroImage.style.transform = 'translate(-50%, -50%)';
-      heroImage.style.opacity = 1;
-    }
+    const headerH = siteHeader.offsetHeight;
+    const scrollRange = getScrollRange();
+
+    // Progress: 0 = no scroll, 1 = fully docked at brand
+    const progress = Math.min(Math.max(scrollY / scrollRange, 0), 1);
+
+    // ── Target: centre of the brand area in viewport coords ──
+    const brandRect = brand.getBoundingClientRect();
+    const targetVX = brandRect.left + 20;           // just left of brand text
+    const targetVY = brandRect.top + brandRect.height / 2;
+
+    // ── Origin in viewport coords ──
+    const originVX = originX - scrollY * 0;  // stays at its layout X (no horizontal parallax at 0)
+    const originVY = originY - scrollY;       // natural scroll position
+
+    // ── Interpolate position ──
+    const viewX = originVX + (targetVX - originVX) * easeOutCubic(progress);
+    // For Y: use the origin viewport position when progress is 0,
+    // smoothly move to targetVY when progress is 1
+    const viewY = originVY + (targetVY - originVY) * easeOutCubic(progress);
+
+    // ── Interpolate size ──
+    const currentSize = originSize + (AVATAR_SIZE - originSize) * easeOutCubic(progress);
+
+    // ── Apply ──
+    heroImage.style.left = viewX + 'px';
+    heroImage.style.top = viewY + 'px';
+    heroImage.style.width = currentSize + 'px';
+    heroImage.style.height = currentSize + 'px';
+    heroImage.style.transform = 'translate(-50%, -50%)';
+
+    ticking = false;
   }
-  
-  function easeInOutCubic(t) {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+  // Smooth easing function
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
   }
-  
-  function requestTick() {
+
+  function onScroll() {
     if (!ticking) {
-      window.requestAnimationFrame(() => {
-        updateHeroImage();
-        ticking = false;
-      });
+      requestAnimationFrame(update);
       ticking = true;
     }
   }
-  
-  // Initial setup
-  updateHeroImage();
-  
-  // Add optimized scroll listener
-  window.addEventListener('scroll', requestTick, { passive: true });
-  
-  // Handle window resize
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Re-measure on resize
+  let resizeTimer;
   window.addEventListener('resize', () => {
-    // Recalculate positions on resize
-    const heroImageWrap = heroImage.parentElement;
-    const newHeroRect = heroImage.getBoundingClientRect();
-    const newHeroWrapRect = heroImageWrap.getBoundingClientRect();
-    const newHeaderRect = siteHeader.getBoundingClientRect();
-    const newBrandRect = brand.getBoundingClientRect();
-    
-    startPos.x = newHeroWrapRect.left + newHeroWrapRect.width / 2;
-    startPos.y = newHeroWrapRect.top + newHeroWrapRect.height / 2;
-    startPos.size = Math.min(380, window.innerWidth * 0.8);
-    
-    endPos.x = newBrandRect.left - 10;
-    endPos.y = newHeaderRect.top + newHeaderRect.height / 2;
-    
-    updateHeroImage();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      measureOrigin();
+      update();
+    }, 100);
   });
+
+  // First paint
+  update();
 }
 
 function initializeApp() {
