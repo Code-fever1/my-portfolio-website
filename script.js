@@ -473,14 +473,13 @@ function setupNavHighlight() {
   }
 
   function updateActiveOnScroll() {
-    // Use a top-based position (with a small offset for the sticky header)
-    // so the section that is actually in view appears active, which feels
-    // more natural on mobile.
     const scrollPosition = window.scrollY + 120; // header + breathing room
 
     let currentHash = null;
+    let closestAbove = null;
+    let closestAboveDist = Infinity;
 
-    sectionEntries.forEach(({ hash, section }, index) => {
+    sectionEntries.forEach(({ hash, section }) => {
       const rect = section.getBoundingClientRect();
       const top = window.scrollY + rect.top;
       const bottom = top + rect.height;
@@ -488,17 +487,27 @@ function setupNavHighlight() {
       if (scrollPosition >= top && scrollPosition < bottom) {
         currentHash = hash;
       }
+
+      // Track the closest section whose top is at or above scroll position
+      const dist = scrollPosition - top;
+      if (dist >= 0 && dist < closestAboveDist) {
+        closestAboveDist = dist;
+        closestAbove = hash;
+      }
     });
 
     const doc = document.documentElement;
     const scrollBottom = window.scrollY + window.innerHeight;
     const docHeight = doc.scrollHeight;
 
-    // If no section matched OR we are effectively at the bottom of the page,
-    // force the last section (e.g. #contact) to be active so the Contact nav
-    // item highlights when the user reaches the end.
-    if (sectionEntries.length && (!currentHash || scrollBottom >= docHeight - 4)) {
+    // At the very bottom of the page, force Contact active
+    if (scrollBottom >= docHeight - 4) {
       currentHash = sectionEntries[sectionEntries.length - 1].hash;
+    }
+
+    // If no section directly contains the scroll position, use the closest above
+    if (!currentHash && closestAbove) {
+      currentHash = closestAbove;
     }
 
     if (currentHash) {
@@ -552,7 +561,7 @@ function setupParallaxAvatar() {
 
   /* ── Tunables ─────────────────────────────────────────── */
   const AVATAR_SIZE = 40;     // final avatar size in px when docked
-  const STOP_GAP = 8;      // px gap above navbar bottom for final Y
+  const MOBILE_BREAKPOINT = 768;  // px — below this, dock immediately
   /* ────────────────────────────────────────────────────── */
 
   // Move image to body so position:fixed works (avoids backdrop-filter context)
@@ -560,56 +569,82 @@ function setupParallaxAvatar() {
     document.body.appendChild(heroImage);
   }
 
-  // Measurements (document-relative)
+  // ── Dock helper: pin image as small avatar next to brand ──
+  function dockAtBrand() {
+    const brandRect = brand.getBoundingClientRect();
+    heroImage.style.left = (brandRect.left + 20) + 'px';
+    heroImage.style.top = (brandRect.top + brandRect.height / 2) + 'px';
+    heroImage.style.width = AVATAR_SIZE + 'px';
+    heroImage.style.height = AVATAR_SIZE + 'px';
+    heroImage.style.transform = 'translate(-50%, -50%)';
+  }
+
+  // ── Mobile: always docked, no scroll animation ──
+  function isMobile() {
+    return window.innerWidth < MOBILE_BREAKPOINT;
+  }
+
+  if (isMobile()) {
+    dockAtBrand();
+    window.addEventListener('resize', () => {
+      if (isMobile()) dockAtBrand();
+    });
+    return; // skip scroll animation entirely on mobile
+  }
+
+  // ── Desktop: full scroll animation ──
+
+  // Clear any stale inline dimensions so CSS values take effect
+  heroImage.style.width = '';
+  heroImage.style.height = '';
+
   let originX, originY, originSize;
 
   function measureOrigin() {
+    // Use wrapper rect for origin — it has the correct CSS size
     const rect = heroImageWrap.getBoundingClientRect();
     originX = rect.left + rect.width / 2 + window.scrollX;
     originY = rect.top + rect.height / 2 + window.scrollY;
-    originSize = heroImage.offsetWidth || rect.width;
+    originSize = rect.width;  // wrapper matches image CSS size
   }
 
   measureOrigin();
 
-  // How far the user must scroll for the full animation to complete
-  // (from hero origin down to where image would be at navbar level)
   function getScrollRange() {
     const headerH = siteHeader.offsetHeight;
-    // The image needs to travel from its document-Y origin to the navbar centre
     const targetDocY = headerH / 2;
-    return Math.max(originY - targetDocY - 60, 1); // 60 = main padding-top
+    return Math.max(originY - targetDocY - 60, 1);
   }
 
   let ticking = false;
 
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
   function update() {
+    // If viewport shrank to mobile during use, dock and bail
+    if (isMobile()) { dockAtBrand(); ticking = false; return; }
+
     const scrollY = window.scrollY;
-    const headerH = siteHeader.offsetHeight;
     const scrollRange = getScrollRange();
-
-    // Progress: 0 = no scroll, 1 = fully docked at brand
     const progress = Math.min(Math.max(scrollY / scrollRange, 0), 1);
+    const ease = easeOutCubic(progress);
 
-    // ── Target: centre of the brand area in viewport coords ──
+    // Target: brand area (viewport coords)
     const brandRect = brand.getBoundingClientRect();
-    const targetVX = brandRect.left + 20;           // just left of brand text
+    const targetVX = brandRect.left + 20;
     const targetVY = brandRect.top + brandRect.height / 2;
 
-    // ── Origin in viewport coords ──
-    const originVX = originX - scrollY * 0;  // stays at its layout X (no horizontal parallax at 0)
-    const originVY = originY - scrollY;       // natural scroll position
+    // Origin: layout position (viewport coords)
+    const originVX = originX - window.scrollX;
+    const originVY = originY - scrollY;
 
-    // ── Interpolate position ──
-    const viewX = originVX + (targetVX - originVX) * easeOutCubic(progress);
-    // For Y: use the origin viewport position when progress is 0,
-    // smoothly move to targetVY when progress is 1
-    const viewY = originVY + (targetVY - originVY) * easeOutCubic(progress);
+    // Interpolate
+    const viewX = originVX + (targetVX - originVX) * ease;
+    const viewY = originVY + (targetVY - originVY) * ease;
+    const currentSize = originSize + (AVATAR_SIZE - originSize) * ease;
 
-    // ── Interpolate size ──
-    const currentSize = originSize + (AVATAR_SIZE - originSize) * easeOutCubic(progress);
-
-    // ── Apply ──
     heroImage.style.left = viewX + 'px';
     heroImage.style.top = viewY + 'px';
     heroImage.style.width = currentSize + 'px';
@@ -617,11 +652,6 @@ function setupParallaxAvatar() {
     heroImage.style.transform = 'translate(-50%, -50%)';
 
     ticking = false;
-  }
-
-  // Smooth easing function
-  function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
   }
 
   function onScroll() {
@@ -633,7 +663,6 @@ function setupParallaxAvatar() {
 
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  // Re-measure on resize
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
@@ -643,7 +672,6 @@ function setupParallaxAvatar() {
     }, 100);
   });
 
-  // First paint
   update();
 }
 
