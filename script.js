@@ -409,6 +409,24 @@ function setupMenu() {
   });
 }
 
+function smoothScrollToElement(hash) {
+  try {
+    const target = document.querySelector(hash);
+    if (!target) return;
+
+    const header = document.querySelector(".site-header");
+    const headerHeight = header ? header.offsetHeight : 0;
+    const targetPosition = target.getBoundingClientRect().top + window.scrollY - headerHeight;
+
+    window.scrollTo({
+      top: targetPosition,
+      behavior: "smooth"
+    });
+  } catch (error) {
+    // Ignore invalid selectors
+  }
+}
+
 function setupNavHighlight() {
   const links = Array.from(
     document.querySelectorAll(".desktop-nav a[href^='#'], .mobile-nav a[href^='#']")
@@ -429,8 +447,10 @@ function setupNavHighlight() {
       // Ignore invalid selectors
     }
 
-    link.addEventListener("click", () => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
       setActiveLink(hash);
+      smoothScrollToElement(hash);
     });
   });
 
@@ -558,8 +578,20 @@ let animationStarted = false;
     const scrollY = window.scrollY;
     const maxScroll = 500; // Distance over which animation completes
     
-    if (scrollY <= maxScroll) {
-      // Calculate progress (0 to 1)
+    // On mobile, keep image in navbar instead of animating
+    const isMobile = window.innerWidth <= 767;
+    
+    if (isMobile) {
+      // Keep hero image fixed in navbar position on mobile
+      heroImage.style.position = 'fixed';
+      heroImage.style.left = `${endPos.x}px`;
+      heroImage.style.top = `${endPos.y}px`;
+      heroImage.style.width = `${endPos.size}px`;
+      heroImage.style.height = `${endPos.size}px`;
+      heroImage.style.transform = 'translate(-50%, -50%)';
+      heroImage.style.opacity = 1;
+    } else if (scrollY <= maxScroll) {
+      // Animate on desktop
       const progress = scrollY / maxScroll;
       const easedProgress = easeInOutCubic(progress);
       
@@ -579,7 +611,7 @@ let animationStarted = false;
       
       animationStarted = true;
     } else {
-      // Hold at final position
+      // Hold at final position on desktop
       heroImage.style.position = 'fixed';
       heroImage.style.left = `${endPos.x}px`;
       heroImage.style.top = `${endPos.y}px`;

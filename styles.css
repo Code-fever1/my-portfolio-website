@@ -308,6 +308,22 @@ img {
   z-index: 300;
 }
 
+/* Mobile hero image adjustments */
+@media (max-width: 767px) {
+  .hero-image {
+    width: min(200px, 60vw);
+    border-width: 3px;
+  }
+  
+  .hero-image-wrap {
+    z-index: 100;
+  }
+  
+  .profile-about {
+    padding: 1rem;
+  }
+}
+
 .desktop-nav a:hover,
 .mobile-nav a:hover,
 .desktop-nav a:active,
