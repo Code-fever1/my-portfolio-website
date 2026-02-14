@@ -530,27 +530,29 @@ function setupParallaxAvatar() {
   if (!heroImage || !siteHeader || !brand) return;
   
   // Get initial positions
+  const heroImageWrap = heroImage.parentElement;
   const heroImageRect = heroImage.getBoundingClientRect();
+  const heroWrapRect = heroImageWrap.getBoundingClientRect();
   const headerRect = siteHeader.getBoundingClientRect();
   const brandRect = brand.getBoundingClientRect();
   
   // Calculate start and end positions
   const startPos = {
-    x: heroImageRect.left + heroImageRect.width / 2 - 40, // Center of hero image
-    y: heroImageRect.top + heroImageRect.height / 2 - 40,
+    x: heroWrapRect.left + heroWrapRect.width / 2, // Center of hero container
+    y: heroWrapRect.top + heroWrapRect.height / 2,
     size: Math.min(380, window.innerWidth * 0.8),
     opacity: 1
   };
   
   const endPos = {
-    x: brandRect.left - 35, // Left side of brand
-    y: headerRect.top + headerRect.height / 2 - 20, // Center of navbar
+    x: brandRect.left - 10, // Left side of brand with minimal spacing
+    y: headerRect.top + headerRect.height / 2, // Center of navbar
     size: 32,
     opacity: 1
   };
   
-  let ticking = false;
-  let animationStarted = false;
+let ticking = false;
+let animationStarted = false;
   
   function updateHeroImage() {
     const scrollY = window.scrollY;
@@ -611,16 +613,18 @@ function setupParallaxAvatar() {
   // Handle window resize
   window.addEventListener('resize', () => {
     // Recalculate positions on resize
+    const heroImageWrap = heroImage.parentElement;
     const newHeroRect = heroImage.getBoundingClientRect();
+    const newHeroWrapRect = heroImageWrap.getBoundingClientRect();
     const newHeaderRect = siteHeader.getBoundingClientRect();
     const newBrandRect = brand.getBoundingClientRect();
     
-    startPos.x = newHeroRect.left + newHeroRect.width / 2 - 40;
-    startPos.y = newHeroRect.top + newHeroRect.height / 2 - 40;
+    startPos.x = newHeroWrapRect.left + newHeroWrapRect.width / 2;
+    startPos.y = newHeroWrapRect.top + newHeroWrapRect.height / 2;
     startPos.size = Math.min(380, window.innerWidth * 0.8);
     
-    endPos.x = newBrandRect.left - 35;
-    endPos.y = newHeaderRect.top + newHeaderRect.height / 2 - 20;
+    endPos.x = newBrandRect.left - 10;
+    endPos.y = newHeaderRect.top + newHeaderRect.height / 2;
     
     updateHeroImage();
   });
