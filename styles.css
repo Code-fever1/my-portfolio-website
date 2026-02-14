@@ -305,6 +305,7 @@ img {
   will-change: transform, opacity, width, height;
   position: fixed;
   opacity: 1;
+  z-index: 300;
 }
 
 .desktop-nav a:hover,
