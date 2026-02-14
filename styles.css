@@ -25,7 +25,7 @@
   --fg: #111827;
   --card: #ffffff;
   --muted: #eef2f7;
-  --muted-fg: #4b5563;
+  --muted-fg: #202020;
   --primary: #0f766e;
   --primary-hover: #115e59af;
   --border: #d4dbe5;
@@ -55,6 +55,21 @@ body {
   color: var(--fg);
   font-family: "Inter", sans-serif;
   line-height: 1.5;
+  position: relative;
+}
+
+/* Background image + blur via pseudo-element so it does NOT create a
+   containing block on body (which would break position:fixed for navbar). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url('./images/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  filter: blur(10px);
 }
 
 a {
@@ -78,11 +93,66 @@ img {
 
 .section-muted {
   background: linear-gradient(180deg, var(--section-muted-start) 0%, var(--section-muted-end) 100%);
+  border-radius: 20px;
 }
 
 .section-title {
   text-align: center;
   margin-bottom: 3rem;
+}
+
+.content-wrapper {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  border-radius: 20px;
+  margin: 2rem 0 0 0;
+  padding: 2rem;
+}
+
+.content-wrapper .hero-copy {
+  text-align: left;
+  max-width: 800px;
+  margin: 0 0 3rem 0;
+}
+
+.content-wrapper .hero-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.content-wrapper .hero-image-wrap {
+  justify-self: end;
+}
+
+@media (max-width: 768px) {
+  .content-wrapper .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .content-wrapper .hero-copy {
+    text-align: center;
+    margin: 0 auto 3rem auto;
+  }
+
+  .content-wrapper .hero-image-wrap {
+    justify-self: center;
+  }
+}
+
+.content-wrapper .hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+[data-theme="dark"] .content-wrapper {
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .section-title h2 {
@@ -98,20 +168,29 @@ img {
 }
 
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 20;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
   backdrop-filter: blur(8px);
   background: var(--header-bg);
   border-bottom: 1px solid var(--border);
 }
 
+/* Offset body content for the fixed header */
+main {
+  padding-top: 58px;
+}
+
 .header-inner {
-  min-height: 56px;
+  min-height: 58px;
   display: flex;
+
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  padding: 0 1rem;
 }
 
 .brand {
@@ -181,7 +260,6 @@ img {
   color: #ffffff;
   background-color: rgba(10, 160, 160, 0.7);
   box-shadow: 0 0 18px rgba(10, 160, 160, 0.7);
-  transform: translateY(-1px);
 }
 
 .desktop-nav a.nav-link-active::after,
@@ -292,6 +370,8 @@ img {
   justify-content: center;
   position: relative;
   z-index: 150;
+  width: min(380px, 80vw);
+  aspect-ratio: 1 / 1;
 }
 
 .hero-image {
@@ -301,11 +381,11 @@ img {
   border-radius: 50%;
   border: 4px solid var(--primary);
   box-shadow: var(--hero-shadow);
-  transition: none;
-  will-change: transform, opacity, width, height;
+  transition: box-shadow 0.25s ease, border-width 0.25s ease;
   position: fixed;
-  opacity: 1;
-  z-index: 300;
+  z-index: 1500;
+  will-change: transform, width, height, left, top;
+  cursor: pointer;
 }
 
 /* Mobile hero image adjustments */
@@ -314,11 +394,12 @@ img {
     width: min(200px, 60vw);
     border-width: 3px;
   }
-  
+
   .hero-image-wrap {
     z-index: 100;
+    width: min(200px, 60vw);
   }
-  
+
   .profile-about {
     padding: 1rem;
   }
@@ -330,7 +411,6 @@ img {
 .mobile-nav a:active {
   color: var(--nav-link-hover);
   background-color: rgba(10, 160, 160, 0.12);
-  transform: translateY(-3px);
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
 }
 
@@ -379,7 +459,7 @@ img {
 .skill-card:active,
 .project-card:hover,
 .project-card:active {
-  
+
   transform: translateY(-5px);
   transform: scale(1.05);
   box-shadow: 0 12px 30px rgba(0, 128, 128, 0.2), 0 0 22px rgba(0, 128, 128, 0.28);
@@ -403,7 +483,7 @@ img {
   transform: translateY(-2px) scale(1.05);
 }
 
-.icon-link{
+.icon-link {
   margin-left: 15px;
 }
 
@@ -412,18 +492,18 @@ img {
   border-color: var(--primary);
   margin-left: 25px;
   box-shadow: 0 0 20px rgba(10, 160, 160, 0.6), 0 0 40px rgba(10, 160, 160, 0.3);
-  transform: scale(1.12) ;
+  transform: scale(1.12);
 }
 
 .hero-image:hover,
 .hero-image:active {
-  transform: scale(1.05);
   box-shadow: 0 5px 45px rgba(0, 128, 128, 0.593);
 }
 
 /* On touch / coarse pointer devices, prevent sticky :hover.
    Only :active (press) should show the visual effects while the finger is held. */
 @media (hover: none) and (pointer: coarse) {
+
   .desktop-nav a:hover,
   .mobile-nav a:hover,
   .btn:hover,
@@ -538,6 +618,48 @@ img {
   display: grid;
   gap: 1.2rem;
   justify-items: center;
+}
+
+.contact-text {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.contact-text h3 {
+  margin: 0;
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.contact-text p {
+  margin: 0;
+  color: var(--muted-fg);
+  font-size: 1.05rem;
+}
+
+.contact-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  margin-top: 1rem;
+}
+
+.contact-footer .brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.contact-footer p {
+  margin: 0;
+  color: var(--muted-fg);
+  font-size: 0.9rem;
 }
 
 .social-links {
